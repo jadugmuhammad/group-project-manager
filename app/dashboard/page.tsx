@@ -30,7 +30,7 @@ export default async function DashboardPage() {
     let doneTasks = 0
     for (const p of projects) {
         totalTasks += p.tasks.length
-        doneTasks += p.tasks.filter(t => t.status === "DONE").length
+        doneTasks += p.tasks.filter((t: { status: string }) => t.status === "DONE").length
     }
 
     return (
