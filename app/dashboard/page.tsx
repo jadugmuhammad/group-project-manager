@@ -139,7 +139,7 @@ export default async function DashboardPage() {
                         </div>
                     ) : (
                         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 2 }}>
-                            {projects.map(project => {
+                            {(projects as any[]).map((project) => {
                                 const done = project.tasks.filter(t => t.status === "DONE").length
                                 const total = project.tasks.length
                                 const pct = total > 0 ? Math.round((done / total) * 100) : 0
