@@ -21,7 +21,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
     const members = [
         { id: project.owner.id, name: project.owner.name },
-        ...project.members.map(m => ({ id: m.user.id, name: m.user.name }))
+        ...project.members.map((m: { user: { id: string; name: string | null } }) => ({ id: m.user.id, name: m.user.name }))
     ]
 
     return NextResponse.json(members)
