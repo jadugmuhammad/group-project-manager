@@ -202,7 +202,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                                     {col.tasks.length === 0 ? (
                                         <p style={{ color: "#c6c6c6", fontSize: 13, padding: "16px 12px", textAlign: "center" }}>Kosong</p>
                                     ) : (
-                                        col.tasks.map(task => (
+                                        col.tasks.map((task: any) => (
                                             <TaskCard key={task.id} task={task} projectId={project.id} />
                                         ))
                                     )}
