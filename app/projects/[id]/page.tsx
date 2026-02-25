@@ -24,15 +24,15 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
 
     if (!project) redirect("/dashboard")
 
-    const allMembers = [project.owner, ...project.members.map(m => m.user)]
+    const allMembers = [project.owner, ...project.members.map((m: any) => m.user)]
     const isOwner = project.ownerId === session.user.id
-    const doneTasks = project.tasks.filter(t => t.status === "DONE").length
+    const doneTasks = project.tasks.filter((t: any) => t.status === "DONE").length
     const totalTasks = project.tasks.length
     const pct = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0
 
-    const todoTasks = project.tasks.filter(t => t.status === "TODO")
-    const inProgressTasks = project.tasks.filter(t => t.status === "IN_PROGRESS")
-    const donedTasks = project.tasks.filter(t => t.status === "DONE")
+    const todoTasks = project.tasks.filter((t: any) => t.status === "TODO")
+    const inProgressTasks = project.tasks.filter((t: any) => t.status === "IN_PROGRESS")
+    const donedTasks = project.tasks.filter((t: any) => t.status === "DONE")
 
     return (
         <>
