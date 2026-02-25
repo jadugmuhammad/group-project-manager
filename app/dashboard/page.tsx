@@ -26,8 +26,12 @@ export default async function DashboardPage() {
         }
     })
 
-    const totalTasks = projects.reduce((acc: number, p: { tasks: { length: number } }) => acc + p.tasks.length, 0)
-    const doneTasks = projects.reduce((acc: number, p: { tasks: { status: string }[] }) => acc + p.tasks.filter(t => t.status === "DONE").length, 0)
+    let totalTasks = 0
+    let doneTasks = 0
+    for (const p of projects) {
+        totalTasks += p.tasks.length
+        doneTasks += p.tasks.filter(t => t.status === "DONE").length
+    }
 
     return (
         <>
