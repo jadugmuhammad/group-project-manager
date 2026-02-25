@@ -111,7 +111,7 @@ export default function RegisterPage() {
                     </div>
 
                     <div style={{ borderTop: "1px solid #393939", paddingTop: 24 }}>
-                        <p style={{ color: "#6f6f6f", fontSize: 12, fontFamily: "'IBM Plex Mono', monospace" }}>© 2026 Projectum</p>
+                        <a href="https://github.com/jadugmuhammad" target="_blank" style={{ color: "#6f6f6f", fontSize: 12, fontFamily: "'IBM Plex Mono', monospace", textDecoration: "none" }}>Made by github.com/jadugmuhammad</a>
                     </div>
                 </div>
 
