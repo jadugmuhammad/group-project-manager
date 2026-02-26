@@ -57,7 +57,7 @@ export default function NewTaskPage() {
           width: 100%;
           background: #ffffff;
           border: none;
-          border-bottom: 1px solid #8d8d8d;
+          border-bottom: 2px solid #8d8d8d;
           padding: 13px 16px;
           font-size: 14px;
           font-family: 'IBM Plex Sans', sans-serif;
@@ -66,32 +66,30 @@ export default function NewTaskPage() {
         }
         .ibm-input:focus {
           border-bottom: 2px solid #0f62fe;
-          outline: 2px solid #0f62fe;
-          outline-offset: -2px;
+          outline: none;
         }
         .ibm-input::placeholder { color: #a8a8a8; }
         .ibm-textarea {
           width: 100%;
           background: #ffffff;
           border: none;
-          border-bottom: 1px solid #8d8d8d;
+          border-bottom: 2px solid #8d8d8d;
           padding: 13px 16px;
           font-size: 14px;
           font-family: 'IBM Plex Sans', sans-serif;
           color: #161616;
           outline: none;
-          resize: vertical;
+          resize: none;
         }
         .ibm-textarea:focus {
           border-bottom: 2px solid #0f62fe;
-          outline: 2px solid #0f62fe;
-          outline-offset: -2px;
+          outline: none;
         }
         .ibm-select {
           width: 100%;
           background: #ffffff;
           border: none;
-          border-bottom: 1px solid #8d8d8d;
+          border-bottom: 2px solid #8d8d8d;
           padding: 13px 16px;
           font-size: 14px;
           font-family: 'IBM Plex Sans', sans-serif;
@@ -105,8 +103,7 @@ export default function NewTaskPage() {
         }
         .ibm-select:focus {
           border-bottom: 2px solid #0f62fe;
-          outline: 2px solid #0f62fe;
-          outline-offset: -2px;
+          outline: none;
         }
         .field-label {
           display: block;
