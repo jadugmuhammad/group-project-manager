@@ -1,7 +1,9 @@
 "use client"
 
+import React from "react"
+
 type Props = {
-    message: string
+    message: React.ReactNode
     onConfirm: () => void
     onCancel: () => void
 }
