@@ -11,11 +11,17 @@ export async function PATCH(
     if (!session) return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
 
     const { taskId } = await params
-    const { status } = await req.json()
+    const { status, title, deadline, assigneeId, notes } = await req.json()
 
     const task = await prisma.task.update({
         where: { id: taskId },
-        data: { status }
+        data: {
+            ...(status && { status }),
+            ...(title && { title }),
+            ...(deadline !== undefined && { deadline: deadline ? new Date(deadline) : null }),
+            ...(assigneeId !== undefined && { assigneeId: assigneeId || null }),
+            ...(notes !== undefined && { notes })
+        }
     })
 
     return NextResponse.json(task)

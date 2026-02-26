@@ -2,7 +2,8 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
+import Navbar from "@/app/components/Navbar"
+import DatePicker from "@/app/components/DatePicker"
 
 export default function NewProjectPage() {
     const router = useRouter()
@@ -48,12 +49,8 @@ export default function NewProjectPage() {
           font-family: 'IBM Plex Sans', sans-serif;
           color: #161616;
           outline: none;
-          transition: border-bottom 0.1s;
         }
-        .ibm-input:focus {
-          border-bottom: 2px solid #0f62fe;
-          outline: none;
-        }
+        .ibm-input:focus { border-bottom-color: #0f62fe; }
         .ibm-input::placeholder { color: #a8a8a8; }
         .ibm-textarea {
           width: 100%;
@@ -66,12 +63,8 @@ export default function NewProjectPage() {
           color: #161616;
           outline: none;
           resize: none;
-          transition: border-bottom 0.1s;
         }
-        .ibm-textarea:focus {
-          border-bottom: 2px solid #0f62fe;
-          outline: none;
-        }
+        .ibm-textarea:focus { border-bottom-color: #0f62fe; }
         .field-label {
           display: block;
           font-size: 12px;
@@ -81,44 +74,43 @@ export default function NewProjectPage() {
           letter-spacing: 0.01em;
           font-family: 'IBM Plex Sans', sans-serif;
         }
+        .nav-inner { padding: 0 48px; }
+        .page-inner { padding: 40px 48px; }
+        .header-inner { padding: 40px 48px; }
+        .form-card { max-width: 640px; background: #ffffff; border-top: 3px solid #0f62fe; padding: 40px; }
+        @media (max-width: 768px) {
+          .nav-inner { padding: 0 20px; }
+          .page-inner { padding: 24px 16px; }
+          .header-inner { padding: 24px 16px; }
+          .form-card { padding: 24px 20px; }
+          .header-title { font-size: 24px !important; }
+        }
       `}</style>
 
             <div style={{ minHeight: "100vh", background: "#f4f4f4", fontFamily: "'IBM Plex Sans', sans-serif" }}>
 
                 {/* Navbar */}
-                <nav style={{ background: "#161616", padding: "0 48px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 48, borderBottom: "1px solid #393939" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <svg width="20" height="20" viewBox="0 0 32 32" fill="white">
-                            <rect x="0" y="0" width="6" height="32" />
-                            <rect x="8" y="6" width="6" height="20" />
-                            <rect x="16" y="0" width="6" height="32" />
-                            <rect x="24" y="6" width="8" height="4" />
-                            <rect x="24" y="14" width="8" height="4" />
-                            <rect x="24" y="22" width="8" height="4" />
-                        </svg>
-                        <span style={{ color: "#ffffff", fontSize: 14 }}>Projectum</span>
-                    </div>
-                    <Link href="/dashboard" style={{ color: "#8d8d8d", fontSize: 13, textDecoration: "none", display: "flex", alignItems: "center", gap: 6 }}>
-                        <svg width="12" height="12" viewBox="0 0 16 16" fill="#8d8d8d">
-                            <path d="M7.293 1.5L1.5 7.293l5.793 5.793 1.414-1.414L4.414 8H15V6H4.414l4.293-4.293z" />
-                        </svg>
-                        Dashboard
-                    </Link>
-                </nav>
+                <Navbar
+                    path={[
+                        { label: "Dashboard", href: "/dashboard" },
+                        { label: "Project Baru" }
+                    ]}
+                />
 
                 {/* Header */}
-                <div style={{ background: "#ffffff", borderBottom: "1px solid #e0e0e0", padding: "40px 48px" }}>
-                    <p style={{ color: "#6f6f6f", fontSize: 12, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 8, fontFamily: "'IBM Plex Mono', monospace" }}>
-                        Project Baru
-                    </p>
-                    <h1 style={{ color: "#161616", fontSize: 36, fontWeight: 300, letterSpacing: "-0.01em" }}>
-                        Buat project baru
-                    </h1>
+                <div style={{ background: "#ffffff", borderBottom: "1px solid #e0e0e0" }}>
+                    <div className="header-inner">
+                        <p style={{ color: "#6f6f6f", fontSize: 12, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 8, fontFamily: "'IBM Plex Mono', monospace" }}>
+                            Project Baru
+                        </p>
+                        <h1 className="header-title" style={{ color: "#161616", fontSize: 36, fontWeight: 300, letterSpacing: "-0.01em" }}>
+                            Buat project baru
+                        </h1>
+                    </div>
                 </div>
 
-                <div style={{ padding: "40px 48px" }}>
-                    <div style={{ maxWidth: 640, background: "#ffffff", borderTop: "3px solid #0f62fe", padding: "40px" }}>
-
+                <div className="page-inner">
+                    <div className="form-card">
                         <form onSubmit={handleSubmit}>
                             <div style={{ marginBottom: 24 }}>
                                 <label className="field-label">Nama Project <span style={{ color: "#da1e28" }}>*</span></label>
@@ -145,11 +137,10 @@ export default function NewProjectPage() {
 
                             <div style={{ marginBottom: 40 }}>
                                 <label className="field-label">Deadline</label>
-                                <input
-                                    type="date"
-                                    className="ibm-input"
+                                <DatePicker
                                     value={form.deadline}
-                                    onChange={e => setForm({ ...form, deadline: e.target.value })}
+                                    onChange={date => setForm({ ...form, deadline: date })}
+                                    placeholder="Pilih deadline"
                                 />
                             </div>
 
@@ -200,7 +191,6 @@ export default function NewProjectPage() {
                                 </button>
                             </div>
                         </form>
-
                     </div>
                 </div>
             </div>

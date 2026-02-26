@@ -2,8 +2,9 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/authOptions"
 import { redirect } from "next/navigation"
 import { prisma } from "@/lib/prisma"
+import Navbar from "@/app/components/Navbar"
 import Link from "next/link"
-import LogoutButton from "../components/LogoutButton"
+import NewProjectButton from "./NewProjectButton"
 
 export default async function DashboardPage() {
     const session = await getServerSession(authOptions)
@@ -56,77 +57,82 @@ export default async function DashboardPage() {
           padding: 24px;
           border-left: 3px solid #0f62fe;
         }
+        .nav-inner {
+          padding: 0 48px;
+        }
+        .main-inner {
+          padding: 40px 48px;
+        }
+        .header-inner {
+          padding: 40px 48px;
+        }
+        .stats-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 2px;
+          margin-bottom: 40px;
+        }
+        .projects-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+          gap: 16px;
+        }
+        @media (max-width: 768px) {
+          .nav-inner { padding: 0 20px; }
+          .main-inner { padding: 24px 20px; }
+          .header-inner { padding: 24px 20px; }
+          .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 2px; }
+          .stat-card { padding: 16px; }
+          .stat-card p:last-child { font-size: 28px !important; }
+          .projects-grid { grid-template-columns: 1fr; }
+          .header-title { font-size: 24px !important; }
+          .new-project-btn span { display: none; }
+        }
       `}</style>
 
             <div style={{ minHeight: "100vh", background: "#f4f4f4", fontFamily: "'IBM Plex Sans', sans-serif" }}>
 
                 {/* Navbar */}
-                <nav style={{ background: "#161616", padding: "0 48px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 48, borderBottom: "1px solid #393939" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <svg width="20" height="20" viewBox="0 0 32 32" fill="white">
-                            <rect x="0" y="0" width="6" height="32" />
-                            <rect x="8" y="6" width="6" height="20" />
-                            <rect x="16" y="0" width="6" height="32" />
-                            <rect x="24" y="6" width="8" height="4" />
-                            <rect x="24" y="14" width="8" height="4" />
-                            <rect x="24" y="22" width="8" height="4" />
-                        </svg>
-                        <span style={{ color: "#ffffff", fontSize: 14, fontWeight: 400 }}>Projectum</span>
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
-                        <span style={{ color: "#8d8d8d", fontSize: 13 }}>{session.user.name}</span>
-                        <LogoutButton />
-                    </div>
-                </nav>
+                <Navbar
+                    path={[{ label: "Dashboard" }]}
+                    user={{ name: session.user.name, email: session.user.email }}
+                />
 
                 {/* Header */}
-                <div style={{ background: "#ffffff", borderBottom: "1px solid #e0e0e0", padding: "40px 48px" }}>
-                    <p style={{ color: "#6f6f6f", fontSize: 12, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 8, fontFamily: "'IBM Plex Mono', monospace" }}>
-                        Dashboard
-                    </p>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-                        <h1 style={{ color: "#161616", fontSize: 36, fontWeight: 300, letterSpacing: "-0.01em" }}>
-                            Selamat datang, {session.user.name?.split(" ")[0]}.
-                        </h1>
-                        <Link href="/projects/new" style={{
-                            background: "#0f62fe",
-                            color: "#ffffff",
-                            textDecoration: "none",
-                            padding: "12px 24px",
-                            fontSize: 14,
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 8,
-                            transition: "background 0.1s"
-                        }}>
-                            <span>Buat Project</span>
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="white">
-                                <path d="M8.707 1.5l-1.414 1.414L10.586 6H1v2h9.586l-3.293 3.086 1.414 1.414L14.414 7z" />
-                            </svg>
-                        </Link>
+                <div style={{ background: "#ffffff", borderBottom: "1px solid #e0e0e0" }}>
+                    <div className="header-inner">
+                        <p style={{ color: "#6f6f6f", fontSize: 12, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 8, fontFamily: "'IBM Plex Mono', monospace" }}>
+                            Dashboard
+                        </p>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 16 }}>
+                            <h1 className="header-title" style={{ color: "#161616", fontSize: 36, fontWeight: 300, letterSpacing: "-0.01em" }}>
+                                Selamat datang, {session.user.name?.split(" ")[0]}.
+                            </h1>
+                            <NewProjectButton />
+                        </div>
                     </div>
                 </div>
 
-                <div style={{ padding: "40px 48px" }}>
+                <div className="main-inner">
 
                     {/* Stats */}
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 2, marginBottom: 40 }}>
+                    <div className="stats-grid">
                         <div className="stat-card">
-                            <p style={{ color: "#6f6f6f", fontSize: 12, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12, fontFamily: "'IBM Plex Mono', monospace" }}>Total Project</p>
+                            <p style={{ color: "#6f6f6f", fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12, fontFamily: "'IBM Plex Mono', monospace" }}>Total Project</p>
                             <p style={{ color: "#161616", fontSize: 40, fontWeight: 300 }}>{projects.length}</p>
                         </div>
                         <div className="stat-card">
-                            <p style={{ color: "#6f6f6f", fontSize: 12, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12, fontFamily: "'IBM Plex Mono', monospace" }}>Total Task</p>
+                            <p style={{ color: "#6f6f6f", fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12, fontFamily: "'IBM Plex Mono', monospace" }}>Total Task</p>
                             <p style={{ color: "#161616", fontSize: 40, fontWeight: 300 }}>{totalTasks}</p>
                         </div>
                         <div className="stat-card">
-                            <p style={{ color: "#6f6f6f", fontSize: 12, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12, fontFamily: "'IBM Plex Mono', monospace" }}>Task Selesai</p>
+                            <p style={{ color: "#6f6f6f", fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12, fontFamily: "'IBM Plex Mono', monospace" }}>Selesai</p>
                             <p style={{ color: "#161616", fontSize: 40, fontWeight: 300 }}>{doneTasks}</p>
                         </div>
                     </div>
 
                     {/* Project List */}
-                    <div style={{ marginBottom: 24 }}>
+                    <div style={{ marginBottom: 16 }}>
                         <p style={{ color: "#6f6f6f", fontSize: 12, letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace" }}>
                             Project Anda — {projects.length} total
                         </p>
@@ -138,7 +144,7 @@ export default async function DashboardPage() {
                             <p style={{ color: "#8d8d8d", fontSize: 14 }}>Mulai dengan membuat project baru.</p>
                         </div>
                     ) : (
-                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 2 }}>
+                        <div className="projects-grid">
                             {(projects as any[]).map((project) => {
                                 const done = project.tasks.filter((t: { status: string }) => t.status === "DONE").length
                                 const total = project.tasks.length
@@ -146,18 +152,31 @@ export default async function DashboardPage() {
 
                                 return (
                                     <Link href={`/projects/${project.id}`} key={project.id} className="project-card">
-                                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
+                                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 4 }}>
                                             <h3 style={{ color: "#161616", fontSize: 16, fontWeight: 500, lineHeight: 1.3 }}>{project.name}</h3>
                                             <span style={{ color: "#0f62fe", fontSize: 12, fontFamily: "'IBM Plex Mono', monospace", whiteSpace: "nowrap", marginLeft: 12 }}>
                                                 {pct}%
                                             </span>
                                         </div>
+                                        {(() => {
+                                            const now = new Date()
+                                            const deadline = project.deadline ? new Date(project.deadline) : null
+                                            const isOverdue = deadline && deadline < now && project.tasks.filter((t: any) => t.status === "DONE").length < project.tasks.length
+
+                                            return (
+                                                <p style={{ color: isOverdue ? "#da1e28" : deadline ? "#525252" : "#a8a8a8", fontSize: 12, fontFamily: "'IBM Plex Mono', monospace", marginBottom: 12 }}>
+                                                    {deadline
+                                                        ? `Deadline: ${deadline.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}${isOverdue ? " — OVERDUE" : ""}`
+                                                        : "Deadline: Tidak ditentukan"
+                                                    }
+                                                </p>
+                                            )
+                                        })()}
                                         <p style={{ color: "#8d8d8d", fontSize: 13, lineHeight: 1.5, marginBottom: 20 }}>
                                             {project.description || "Tidak ada deskripsi"}
                                         </p>
-                                        {/* Progress bar */}
                                         <div style={{ background: "#e0e0e0", height: 2, marginBottom: 16 }}>
-                                            <div style={{ background: "#0f62fe", height: 2, width: `${pct}%`, transition: "width 0.3s" }} />
+                                            <div style={{ background: "#0f62fe", height: 2, width: `${pct}%` }} />
                                         </div>
                                         <div style={{ display: "flex", gap: 16 }}>
                                             <span style={{ color: "#6f6f6f", fontSize: 12, fontFamily: "'IBM Plex Mono', monospace" }}>

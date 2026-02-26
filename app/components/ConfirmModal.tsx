@@ -6,9 +6,11 @@ type Props = {
     message: React.ReactNode
     onConfirm: () => void
     onCancel: () => void
+    confirmLabel?: string
+    confirmColor?: string
 }
 
-export default function ConfirmModal({ message, onConfirm, onCancel }: Props) {
+export default function ConfirmModal({ message, onConfirm, onCancel, confirmLabel = "Hapus", confirmColor = "#da1e28" }: Props) {
     return (
         <div style={{
             position: "fixed",
@@ -23,10 +25,10 @@ export default function ConfirmModal({ message, onConfirm, onCancel }: Props) {
                 background: "#ffffff",
                 width: "100%",
                 maxWidth: 480,
-                borderTop: "3px solid #da1e28",
+                borderTop: `3px solid ${confirmColor}`,
                 fontFamily: "'IBM Plex Sans', sans-serif"
             }}>
-                <div style={{ padding: "42px 32px", borderBottom: "1px solid #e0e0e0" }}>
+                <div style={{ padding: "40px 32px", borderBottom: "1px solid #e0e0e0" }}>
                     <p style={{ color: "#6f6f6f", fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 8, fontFamily: "'IBM Plex Mono', monospace", textAlign: "left" }}>
                         Konfirmasi
                     </p>
@@ -34,7 +36,7 @@ export default function ConfirmModal({ message, onConfirm, onCancel }: Props) {
                         {message}
                     </p>
                 </div>
-                <div style={{ padding: "14px 32px", display: "flex", justifyContent: "flex-end", gap: 2 }}>
+                <div style={{ padding: "16px 32px", display: "flex", justifyContent: "flex-end", gap: 2 }}>
                     <button
                         onClick={onCancel}
                         style={{
@@ -52,7 +54,7 @@ export default function ConfirmModal({ message, onConfirm, onCancel }: Props) {
                     <button
                         onClick={onConfirm}
                         style={{
-                            background: "#da1e28",
+                            background: confirmColor,
                             border: "none",
                             color: "#ffffff",
                             padding: "10px 24px",
@@ -61,7 +63,7 @@ export default function ConfirmModal({ message, onConfirm, onCancel }: Props) {
                             cursor: "pointer"
                         }}
                     >
-                        Hapus
+                        {confirmLabel}
                     </button>
                 </div>
             </div>
