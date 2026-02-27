@@ -15,17 +15,20 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String         @id @default(cuid())
   name          String?
-  email         String    @unique
+  email         String?        @unique
   password      String?
-  createdAt     DateTime  @default(now())
-
-  ownedProjects Project[] @relation("ProjectOwner")
-  memberships   Member[]
+  createdAt     DateTime       @default(now())
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  ownedProjects Project[]      @relation("ProjectOwner")
+  memberOf      Member[]
   assignedTasks Task[]
-  accounts Account[]
-  sessions Session[]
+  notifications Notification[]
+  invites       Invite[]
 }
 
 model Project {
@@ -34,9 +37,10 @@ model Project {
   description String?
   deadline    DateTime?
   createdAt   DateTime  @default(now())
+  invites       Invite[]
 
   ownerId     String
-  owner       User      @relation("ProjectOwner", fields: [ownerId], references: [id])
+  owner User @relation("ProjectOwner", fields: [ownerId], references: [id])
   members     Member[]
   tasks       Task[]
 }
@@ -107,4 +111,26 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Notification {
+  id          String   @id @default(cuid())
+  userId      String
+  type        String
+  message     String
+  read        Boolean  @default(false)
+  link        String?
+  referenceId String?
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model Invite {
+  id        String   @id @default(cuid())
+  projectId String
+  userId    String
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
+  project   Project  @relation(fields: [projectId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }

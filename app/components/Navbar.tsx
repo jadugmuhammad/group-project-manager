@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { ReactNode } from "react"
 import UserMenu from "./UserMenu"
+import NotificationBell from "./NotificationBell"
 
 type Props = {
     backHref?: string
@@ -46,6 +47,7 @@ export default function Navbar({ backHref, backLabel, right, user, path }: Props
                 </div>
 
                 <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                    {user && <NotificationBell />}
                     {user && <UserMenu name={user.name} email={user.email} />}
                     {right && right}
                 </div>

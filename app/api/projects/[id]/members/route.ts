@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/authOptions"
 import { prisma } from "@/lib/prisma"
+import { createNotification, createNotificationMany } from "@/lib/notifications"
 
 export async function GET(
     req: NextRequest,
@@ -61,7 +62,32 @@ export async function POST(
 
     await prisma.member.create({ data: { userId: user.id, projectId: id } })
 
-    return NextResponse.json({ message: "Anggota berhasil ditambahkan", user: { id: user.id, name: user.name } })
+    // Cek apakah sudah ada invite pending
+    const existingInvite = await prisma.invite.findFirst({
+        where: { projectId: id, userId: user.id, status: "PENDING" }
+    })
+    if (existingInvite) {
+        return NextResponse.json({ message: "Undangan sudah dikirim" }, { status: 400 })
+    }
+
+    // Buat invite
+    const invite = await prisma.invite.create({
+        data: { projectId: id, userId: user.id }
+    })
+
+    try {
+        await createNotification({
+            userId: user.id,
+            type: "INVITE_PENDING",
+            message: `Kamu diundang ke project "${project.name}"`,
+            link: `/projects/${id}`,
+            referenceId: invite.id
+        })
+    } catch (e) {
+        console.error("Notification error:", e)
+    }
+
+    return NextResponse.json({ message: "Undangan berhasil dikirim", user: { id: user.id, name: user.name } })
 }
 
 export async function DELETE(
@@ -74,7 +100,10 @@ export async function DELETE(
     const { id } = await params
     const { userId } = await req.json()
 
-    const project = await prisma.project.findUnique({ where: { id } })
+    const project = await prisma.project.findUnique({
+        where: { id },
+        include: { members: true }
+    })
     if (!project) return NextResponse.json({ message: "Project tidak ditemukan" }, { status: 404 })
 
     if (project.ownerId !== session.user.id && userId !== session.user.id) {
@@ -82,6 +111,38 @@ export async function DELETE(
     }
 
     await prisma.member.deleteMany({ where: { projectId: id, userId } })
+
+    const isKicked = userId !== session.user.id
+    const leavingUser = await prisma.user.findUnique({ where: { id: userId } })
+
+    try {
+        if (isKicked && leavingUser) {
+            await createNotification({
+                userId,
+                type: "KICKED",
+                message: `Kamu dikeluarkan dari project "${project.name}"`
+            })
+        }
+
+        const otherIds = project.members
+            .map(m => m.userId)
+            .filter(uid => uid !== userId && uid !== session.user.id)
+
+        if (otherIds.length > 0 && leavingUser) {
+            await createNotificationMany(
+                otherIds.map(uid => ({
+                    userId: uid,
+                    type: isKicked ? "MEMBER_KICKED" : "MEMBER_LEFT",
+                    message: isKicked
+                        ? `${leavingUser.name} dikeluarkan dari project "${project.name}"`
+                        : `${leavingUser.name} keluar dari project "${project.name}"`,
+                    link: `/projects/${id}`
+                }))
+            )
+        }
+    } catch (e) {
+        console.error("Notification error:", e)
+    }
 
     return NextResponse.json({ message: "Berhasil" })
 }

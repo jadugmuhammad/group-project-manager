@@ -37,11 +37,13 @@ function serializeBlocks(blocks: NoteBlock[]): string {
 }
 
 function renderTextWithLinks(text: string) {
-    const parts = text.split(/(https?:\/\/[^\s]+)/g)
+    const urlRegex = /((?:https?:\/\/|www\.)[^\s]+|[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?)/g
+    const parts = text.split(urlRegex)
     return parts.map((part, i) => {
         if (i % 2 === 1) {
+            const href = part.startsWith("http") ? part : `https://${part}`
             return (
-                <a key={i} href={part} target="_blank" rel="noopener noreferrer"
+                <a key={i} href={href} target="_blank" rel="noopener noreferrer"
                     style={{ color: "#0f62fe", textDecoration: "underline", wordBreak: "break-all" }}
                     onClick={e => e.stopPropagation()}
                 >
