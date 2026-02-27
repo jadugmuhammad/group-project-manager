@@ -60,9 +60,6 @@ export async function POST(
         return NextResponse.json({ message: "User sudah menjadi anggota" }, { status: 400 })
     }
 
-    await prisma.member.create({ data: { userId: user.id, projectId: id } })
-
-    // Cek apakah sudah ada invite pending
     const existingInvite = await prisma.invite.findFirst({
         where: { projectId: id, userId: user.id, status: "PENDING" }
     })
@@ -70,7 +67,6 @@ export async function POST(
         return NextResponse.json({ message: "Undangan sudah dikirim" }, { status: 400 })
     }
 
-    // Buat invite
     const invite = await prisma.invite.create({
         data: { projectId: id, userId: user.id }
     })
@@ -87,7 +83,7 @@ export async function POST(
         console.error("Notification error:", e)
     }
 
-    return NextResponse.json({ message: "Undangan berhasil dikirim", user: { id: user.id, name: user.name } })
+    return NextResponse.json({ message: "Undangan berhasil dikirim" })
 }
 
 export async function DELETE(

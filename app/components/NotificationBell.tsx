@@ -99,6 +99,8 @@ export default function NotificationBell() {
         MEMBER_KICKED: "⛔",
         PROJECT_DELETED: "🗑️",
         NEW_OWNER: "👑",
+        DEADLINE_SOON: "⏰",
+        DEADLINE_OVERDUE: "🚨",
     }
 
     return (

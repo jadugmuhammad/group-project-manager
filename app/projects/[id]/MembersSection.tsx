@@ -203,7 +203,6 @@ export default function MembersSection({ projectId, ownerId, currentUserId, init
                         <InviteMember
                             projectId={projectId}
                             isOwner={isOwner}
-                            onMemberAdded={handleMemberAdded}
                         />
                     </div>
                         

@@ -1,0 +1,13 @@
+{
+    "crons": [
+        {
+            "path": "/api/cron/overdue",
+            "schedule": "0 * * * *"
+        }
+    ]
+}
+```
+
+Tambahkan `CRON_SECRET` di `.env.local`:
+```
+CRON_SECRET=isi_dengan_string_random_panjang

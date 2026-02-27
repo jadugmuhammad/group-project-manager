@@ -9,11 +9,10 @@ type Member = {
 
 export default function InviteMember({
     projectId,
-    onMemberAdded
+    isOwner,
 }: {
     projectId: string
     isOwner?: boolean
-    onMemberAdded?: (member: Member) => void
 }) {
     const [email, setEmail] = useState("")
     const [message, setMessage] = useState("")
@@ -37,12 +36,9 @@ export default function InviteMember({
             return
         }
 
-        setMessage("Anggota berhasil ditambahkan.")
+        setMessage("Undangan berhasil dikirim.")
         setError(false)
         setEmail("")
-        if (onMemberAdded && data.user) {
-            onMemberAdded({ id: data.user.id, name: data.user.name })
-        }
     }
 
     return (
